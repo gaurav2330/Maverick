@@ -1,0 +1,12 @@
+{
+  "name": "maverick-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "maverick": "src/index.js"
+  },
+  "scripts": {
+    "dev": "node src/index.js"
+  },
+  "type": "module"
+}
