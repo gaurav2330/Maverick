@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 import { walkDirectory } from "./walker.js";
+import { chunkDocument, saveChunks } from "../chunking/index.js";
 
 const DATA_FILE = path.resolve("../../data/documents.json");
 
@@ -21,5 +22,16 @@ export function ingestPath(targetPath) {
   const allDocs = existing.concat(newDocs);
   fs.writeFileSync(DATA_FILE, JSON.stringify(allDocs, null, 2));
 
-  return { added: newDocs.length };
+  console.log(`Ingested ${newDocs.length} new documents.`);
+
+  let allChunks = [];
+
+  for (const doc of newDocs) {
+    const chunks = chunkDocument(doc)
+    allChunks.push(...chunks);
+  }
+
+  saveChunks(allChunks);
+
+  return { added: newDocs.length, chunks: allChunks.length };
 }
