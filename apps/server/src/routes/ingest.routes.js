@@ -3,7 +3,7 @@ import { ingestPath } from '../ingest/index.js';
 
 export const ingestRouter = Router();
 
-ingestRouter.post('/ingest', (req, res) => {
+ingestRouter.post('/ingest', async (req, res) => {
   console.log('Ingest request received');
   const { path } = req.body;
 
@@ -12,7 +12,7 @@ ingestRouter.post('/ingest', (req, res) => {
   }
 
   try {
-    const result = ingestPath(path);
+    const result = await ingestPath(path);
     res.json({ success: true, ...result });
   } catch (error) {
     res.status(500).json({ error: error.message });

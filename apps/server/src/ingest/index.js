@@ -3,10 +3,11 @@ import path from "path";
 import crypto from "crypto";
 import { walkDirectory } from "./walker.js";
 import { chunkDocument, saveChunks } from "../chunking/index.js";
+import { embedChunks } from "../embeddings/index.js";
 
 const DATA_FILE = path.resolve("../../data/documents.json");
 
-export function ingestPath(targetPath) {
+export async function ingestPath(targetPath) {
   const files = walkDirectory(targetPath);
 
   const existing = JSON.parse(fs.readFileSync(DATA_FILE, "utf-8") || "[]");
@@ -32,6 +33,7 @@ export function ingestPath(targetPath) {
   }
 
   saveChunks(allChunks);
+  let embeddings_count = await embedChunks(allChunks);
 
-  return { added: newDocs.length, chunks: allChunks.length };
+  return { added: newDocs.length, chunks: allChunks.length, embeddings: embeddings_count };
 }

@@ -4,7 +4,6 @@ export function chunkCode ({ content, documentId, path }) {
 
   const LINES_PER_CHUNK = 40;
   let index = 0;
-  console.log("chunking code content", lines.length);
 
   for (let i = 0; i < lines.length; i += LINES_PER_CHUNK) {
     const slice = lines.slice(i, i + LINES_PER_CHUNK).join('\n');

@@ -10,7 +10,6 @@ export function chunkDocument(doc) {
   const content = fs.readFileSync(doc.path, 'utf-8');
   
   if (doc.extension && CODE_EXTENSIONS.has(doc.extension)) {
-    console.log("in here", doc.extension);
     return chunkCode({
       content,
       documentId: doc.id,
