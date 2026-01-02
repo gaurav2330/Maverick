@@ -29,20 +29,17 @@ export async function search(query, topK = 5) {
   const scored = embeddings
     .filter(e => Array.isArray(e.vector))
     .map(e => {
-      console.log('Computing score for embedding id:', e.chunkId);
       const chunk = chunks.find(c => c.id === e.chunkId);
 
       if (!chunk) {
         console.warn('No chunk found for embedding id:', e.chunkId);
         return null;
       }
-      console.log('Corresponding chunk:', chunk);
       return {
         ...chunk,
         score: cosineSimilarity(queryVector, e.vector)
       };
     });
 
-  console.log('Scored chunks:', scored);
   return scored.sort((a, b) => b.score - a.score).slice(0, topK);
 }
