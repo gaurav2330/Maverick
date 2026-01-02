@@ -66,6 +66,36 @@ if (command === 'health') {
   } catch (error) {
     console.error('Error during search:', error.message);
   }
+} else if (command === 'ask') {
+  const question = process.argv.slice(3).join(' ');
+  if (!question) {
+    console.log('Usage: maverick ask <question>');
+    process.exit(1);
+  }
+  
+  try {
+    const res = await fetch('http://localhost:4545/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question }),
+    });
+
+    const data = await res.json();
+
+    console.log(`❓ Question:\n${question}\n`);
+    console.log(`💡 Answer:\n${data.answer}\n`);
+    console.log(`📚 Sources:`);
+    (data.sources || []).forEach((s, i) => {
+      let location = s.path;
+      if (s.startLine) {
+        location += `:${s.startLine}-${s.endLine}`;
+      }
+
+      console.log(`  [${i + 1}] ${location}`);
+    });
+  } catch (error) {
+    console.error('Error during question answering:', error.message);
+  }
 } else {
   console.log(`Unknown command: ${command}`);
   process.exit(1);
